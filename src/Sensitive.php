@@ -20,7 +20,7 @@ class Sensitive implements SensitiveInterface
         protected ?FilterInterface      $filter = null
     )
     {
-        $this->interceptor = $this->interceptor ?? new LocalInterceptor();
+        $this->interceptor = $this->interceptor ?? new DatabaseInterceptor();
         $this->filter      = $this->filter ?? new Filter();
     }
 

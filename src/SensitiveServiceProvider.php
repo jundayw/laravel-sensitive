@@ -24,7 +24,7 @@ class SensitiveServiceProvider extends ServiceProvider
 
         $this->app->bind(SensitiveInterface::class, Sensitive::class);
         $this->app->bind(DatabaseInterface::class, DatabaseSensitive::class);
-        $this->app->bind(InterceptorInterface::class, config('sensitive.driver',LocalInterceptor::class));
+        $this->app->bind(InterceptorInterface::class, config('sensitive.driver',DatabaseInterceptor::class));
         $this->app->bind(FilterInterface::class, Filter::class);
     }
 

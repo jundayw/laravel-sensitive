@@ -8,7 +8,7 @@ use Jundayw\LaravelSensitive\Contracts\DatabaseInterface;
 use Jundayw\LaravelSensitive\Contracts\InterceptorInterface;
 use Jundayw\LaravelSensitive\Support\DatabaseSensitive;
 
-class LocalInterceptor implements InterceptorInterface
+class DatabaseInterceptor implements InterceptorInterface
 {
     public function __construct(protected ?DatabaseInterface $database = null)
     {
