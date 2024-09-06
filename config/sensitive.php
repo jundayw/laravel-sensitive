@@ -8,14 +8,14 @@ return [
     |--------------------------------------------------------------------------
     |
     | Supported Drivers:
-    | \Jundayw\LaravelSensitive\Interceptors\LocalInterceptor::class
+    | \Jundayw\LaravelSensitive\LocalInterceptor::class
     |
     | Default:
-    | \Jundayw\LaravelSensitive\Interceptors\LocalInterceptor::class
+    | \Jundayw\LaravelSensitive\LocalInterceptor::class
     |
     */
 
-    'driver' => \Jundayw\LaravelSensitive\Interceptors\LocalInterceptor::class,
+    'driver' => \Jundayw\LaravelSensitive\LocalInterceptor::class,
 
     /*
     |--------------------------------------------------------------------------

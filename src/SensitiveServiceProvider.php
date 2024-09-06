@@ -3,6 +3,11 @@
 namespace Jundayw\LaravelSensitive;
 
 use Illuminate\Support\ServiceProvider;
+use Jundayw\LaravelSensitive\Contracts\FilterInterface;
+use Jundayw\LaravelSensitive\Contracts\InterceptorInterface;
+use Jundayw\LaravelSensitive\Contracts\DatabaseInterface;
+use Jundayw\LaravelSensitive\Contracts\SensitiveInterface;
+use Jundayw\LaravelSensitive\Support\DatabaseSensitive;
 
 class SensitiveServiceProvider extends ServiceProvider
 {
@@ -16,6 +21,11 @@ class SensitiveServiceProvider extends ServiceProvider
         if (!app()->configurationIsCached()) {
             $this->mergeConfigFrom(__DIR__ . '/../config/sensitive.php', 'sensitive');
         }
+
+        $this->app->bind(SensitiveInterface::class, Sensitive::class);
+        $this->app->bind(DatabaseInterface::class, DatabaseSensitive::class);
+        $this->app->bind(InterceptorInterface::class, config('sensitive.driver',LocalInterceptor::class));
+        $this->app->bind(FilterInterface::class, Filter::class);
     }
 
     /**
@@ -30,7 +40,7 @@ class SensitiveServiceProvider extends ServiceProvider
 
             $this->publishes([
                 __DIR__ . '/../database/migrations' => database_path('migrations'),
-                __DIR__ . '/../database/seeders' => database_path('seeders'),
+                __DIR__ . '/../database/seeders'    => database_path('seeders'),
             ], 'sensitive-migrations');
 
             $this->publishes([
