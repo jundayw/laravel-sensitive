@@ -32,4 +32,8 @@ interface FilterInterface
 
     public function dispatch(...$arguments): void;
 
+    public function getValues(int $scope = SensitiveInterface::STATUS_ALL): array;
+
+    public function getStopWords(int $scope = SensitiveInterface::STATUS_ALL): array;
+
 }

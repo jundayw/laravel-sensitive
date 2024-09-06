@@ -16,8 +16,9 @@ class SensitiveSeeder extends Seeder
     public function run()
     {
         $prefix = DB::connection(config('sensitive.database.connection'))->getTablePrefix();
-        $table = config('sensitive.database.table', 'sensitive');
-        $query = <<<EOT
+        $table  = config('sensitive.database.table', 'sensitive');
+        $query  = <<<EOT
+INSERT INTO `{$prefix}{$table}` VALUES ('1', '测试', 'BLOCK', 'REVIEW', 'REPLACE', 'PASS', '***', '2022-01-02 15:07:39', '2022-01-02 15:07:39', null);
 INSERT INTO `{$prefix}{$table}` VALUES ('2', '做爱', 'BLOCK', 'BLOCK', 'BLOCK', 'REPLACE', '***', '2022-01-02 15:07:39', '2022-01-02 15:07:39', null);
 INSERT INTO `{$prefix}{$table}` VALUES ('3', '打人', 'BLOCK', 'BLOCK', 'BLOCK', 'REVIEW', '***', '2022-01-02 15:07:39', '2022-01-02 15:07:39', null);
 INSERT INTO `{$prefix}{$table}` VALUES ('4', '爱女人', 'BLOCK', 'BLOCK', 'BLOCK', 'REPLACE', '***', '2022-01-02 03:13:48', '2022-01-02 03:13:48', null);

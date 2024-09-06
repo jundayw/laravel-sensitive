@@ -91,7 +91,49 @@ class CloudInterceptor implements InterceptorInterface
 
 ## Getting Started
 
-> 自定义处理敏感词
+#### 适合`通过`、`拒绝`场景
+
+仅支持`SensitiveInterface::STATUS_PASS | SensitiveInterface::STATUS_BLOCK`
+
+```php
+Sensitive::username(string $content);
+```
+
+#### 适合`通过`、`审核`、`拒绝`场景
+
+仅支持`SensitiveInterface::STATUS_PASS | SensitiveInterface::STATUS_REVIEW | SensitiveInterface::STATUS_BLOCK`
+
+```php
+Sensitive::nickname(string $content);
+```
+
+#### 适合`通过`、`审核`、`替换`场景
+
+仅支持`SensitiveInterface::STATUS_PASS | SensitiveInterface::STATUS_REVIEW | SensitiveInterface::STATUS_REPLACE`
+
+```php
+Sensitive::message(string $content);
+```
+
+#### 适合`通过`、`审核`、`拒绝`、`替换`场景
+
+支持`SensitiveInterface::STATUS_ALL`
+
+```php
+Sensitive::content(string $content);
+```
+
+#### 自定义
+
+支持`SensitiveInterface::STATUS_PASS | SensitiveInterface::STATUS_REPLACE | SensitiveInterface::STATUS_REVIEW | SensitiveInterface::STATUS_BLOCK`
+
+```php
+Sensitive::filter(string $content, string $field = 'username|nickname|message|content', int $scope = SensitiveInterface::STATUS_ALL);
+```
+
+## Quick Examples
+
+#### 自定义处理敏感词
 
 ```php
 <?php
@@ -120,7 +162,7 @@ public function handle(SensitiveInterface $sensitive): void
 }
 ```
 
-> 不允许含有任何敏感词
+#### 不允许含有任何敏感词
 
 ```php
 <?php
@@ -138,7 +180,7 @@ try {
 }
 ```
 
-> 将含有任何敏感词做替换处理，并通过事件做异步处理
+#### 将含有任何敏感词做替换处理，并通过事件做异步处理
 
 ```php
 <?php
@@ -163,6 +205,55 @@ $user = User::create([
 $instance->event(SensitiveInterface::STATUS_REVIEW | SensitiveInterface::STATUS_BLOCK, SensitiveReviewEvent::class);
 $instance->dispatch($user, $instance->getContent(), $instance->getRaw());
 ```
+
+#### 完整使用案例
+
+```php
+<?php
+
+use Jundayw\LaravelSensitive\Contracts\SensitiveInterface;
+use Jundayw\LaravelSensitive\Events\SensitiveBlockEvent;
+use Jundayw\LaravelSensitive\Events\SensitivePassEvent;
+use Jundayw\LaravelSensitive\Events\SensitiveReplaceEvent;
+use Jundayw\LaravelSensitive\Events\SensitiveReviewEvent;
+use Jundayw\LaravelSensitive\Facades\Sensitive;
+
+$content  = '本校小额贷款，安全、快捷、方便、无抵押，随机随贷，当天放款，上门服务。';
+
+// listen 用于设置各状态的监听及回调处理函数
+$instance = Sensitive::listen(SensitiveInterface::STATUS_BLOCK, function (string $content, ...$arguments) {
+    return $content;// @todo block
+})->listen(SensitiveInterface::STATUS_REVIEW, function (string $content, ...$arguments) {
+    return $content;// @todo review
+})->listen(SensitiveInterface::STATUS_REPLACE, function (string $content, ...$arguments) {
+    return $content;// @todo replace
+})->listen(SensitiveInterface::STATUS_PASS, function (string $content, ...$arguments) {
+    return $content;// @todo pass
+})->listen(SensitiveInterface::STATUS_ALL, function (string $content, ...$arguments) {
+    return $content;// @todo any
+})->content($content);
+
+var_dump($instance->isBlock());
+var_dump($instance->isReview());
+var_dump($instance->isReplace());
+var_dump($instance->isPass());
+var_dump($instance->getScope());
+var_dump($instance->getRaw());
+var_dump($instance->getContent());
+var_dump($instance->getValues(SensitiveInterface::STATUS_BLOCK | SensitiveInterface::STATUS_REPLACE));
+var_dump($instance->getStopWords(SensitiveInterface::STATUS_ALL));
+
+// event 用于配置异步回调事件，方便对违规敏感词进一步做处理，如：修改状态为待审核、禁言、封号等后续操作
+$instance
+    //->event(SensitiveInterface::STATUS_ALL, SensitivePassEvent::class)
+    ->event(SensitiveInterface::STATUS_BLOCK, SensitiveBlockEvent::class)
+    ->event(SensitiveInterface::STATUS_REVIEW, SensitiveReviewEvent::class)
+    ->event(SensitiveInterface::STATUS_REPLACE, SensitiveReplaceEvent::class)
+    ->event(SensitiveInterface::STATUS_PASS, SensitivePassEvent::class)
+    ->dispatch(...);
+```
+
+设置事件后，请正常使用 `Laravel` [事件和监听器](https://laravel.com/docs/11.x/events) 进行事件注册和调度。
 
 ## License
 

@@ -26,25 +26,10 @@ trait SensitiveListenTrait
 
     public function listen(int $scope, callable $listen): static
     {
-        $isPass    = (SensitiveInterface::STATUS_PASS & $scope) === SensitiveInterface::STATUS_PASS;
-        $isReplace = (SensitiveInterface::STATUS_REPLACE & $scope) === SensitiveInterface::STATUS_REPLACE;
-        $isReview  = (SensitiveInterface::STATUS_REVIEW & $scope) === SensitiveInterface::STATUS_REVIEW;
-        $isBlock   = (SensitiveInterface::STATUS_BLOCK & $scope) === SensitiveInterface::STATUS_BLOCK;
-
-        if ($isPass || $scope === SensitiveInterface::STATUS_ALL) {
-            $this->listens[SensitiveInterface::STATUS_PASS][] = $listen;
-        }
-
-        if ($isReplace || $scope === SensitiveInterface::STATUS_ALL) {
-            $this->listens[SensitiveInterface::STATUS_REPLACE][] = $listen;
-        }
-
-        if ($isReview || $scope === SensitiveInterface::STATUS_ALL) {
-            $this->listens[SensitiveInterface::STATUS_REVIEW][] = $listen;
-        }
-
-        if ($isBlock || $scope === SensitiveInterface::STATUS_ALL) {
-            $this->listens[SensitiveInterface::STATUS_BLOCK][] = $listen;
+        foreach ($this->listens as $status => $listens) {
+            if ($status === ($scope & $status)) {
+                $this->listens[$status][] = $listen;
+            }
         }
 
         return $this;

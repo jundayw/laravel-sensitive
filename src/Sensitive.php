@@ -15,6 +15,8 @@ class Sensitive implements SensitiveInterface
     use SensitiveTrait;
     use SensitiveListenTrait;
 
+    protected int $scope = 0;
+
     public function __construct(
         protected ?InterceptorInterface $interceptor = null,
         protected ?FilterInterface      $filter = null
@@ -38,34 +40,26 @@ class Sensitive implements SensitiveInterface
         $raw        = $content;
         $collection = $this->interceptor->handle($content, $field);
 
-        if ($collection->contains(fn($item) => $item['stop_type'] == DatabaseInterface::VALUE_BLOCK)) {
-            $collect = $collection->where('stop_type', DatabaseInterface::VALUE_BLOCK);
-            foreach ($this->getListens(SensitiveInterface::STATUS_BLOCK) as $listen) {
-                $content = call_user_func($listen, $content, $field, $scope, $collect, $this);
+        $maps = [
+            DatabaseInterface::VALUE_BLOCK   => SensitiveInterface::STATUS_BLOCK,
+            DatabaseInterface::VALUE_REVIEW  => SensitiveInterface::STATUS_REVIEW,
+            DatabaseInterface::VALUE_PASS    => SensitiveInterface::STATUS_PASS,
+            DatabaseInterface::VALUE_REPLACE => SensitiveInterface::STATUS_REPLACE,
+        ];
+
+        foreach ($maps as $value => $status) {
+            if (($collect = $collection->where('stop_type', $value))->isNotEmpty()) {
+                $this->scope |= $status;
+                if (SensitiveInterface::STATUS_REPLACE == $status) {
+                    $content = $this->replacement($content, $collect);
+                }
+                foreach ($this->getListens($status) as $listen) {
+                    $content = call_user_func($listen, $content, $field, $this->scope, $collect, $this);
+                }
             }
         }
 
-        if ($collection->contains(fn($item) => $item['stop_type'] == DatabaseInterface::VALUE_REVIEW)) {
-            $collect = $collection->where('stop_type', DatabaseInterface::VALUE_REVIEW);
-            foreach ($this->getListens(SensitiveInterface::STATUS_REVIEW) as $listen) {
-                $content = call_user_func($listen, $content, $field, $scope, $collect, $this);
-            }
-        }
-
-        if ($collection->contains(fn($item) => $item['stop_type'] == DatabaseInterface::VALUE_REPLACE)) {
-            $collect = $collection->where('stop_type', DatabaseInterface::VALUE_REPLACE);
-            $content = $this->replacement($content, $collect);
-            foreach ($this->getListens(SensitiveInterface::STATUS_REPLACE) as $listen) {
-                $content = call_user_func($listen, $content, $field, $scope, $collect, $this);
-            }
-        }
-
-        $collect = $collection->where('stop_type', DatabaseInterface::VALUE_PASS);
-        foreach ($this->getListens(SensitiveInterface::STATUS_PASS) as $listen) {
-            $content = call_user_func($listen, $content, $field, $scope, $collect, $this);
-        }
-
-        return $this->filter->handle($raw, $content, $field, $scope, $collection);
+        return $this->filter->handle($raw, $content, $field, $this->scope, $collection);
     }
 
 }
