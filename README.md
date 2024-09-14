@@ -221,15 +221,15 @@ use Jundayw\LaravelSensitive\Facades\Sensitive;
 $content  = '本校小额贷款，安全、快捷、方便、无抵押，随机随贷，当天放款，上门服务。';
 
 // listen 用于设置各状态的监听及回调处理函数
-$instance = Sensitive::listen(SensitiveInterface::STATUS_BLOCK, function (string $content, ...$arguments) {
+$instance = Sensitive::listen(SensitiveInterface::STATUS_BLOCK, function (string $content) {
     return $content;// @todo block
-})->listen(SensitiveInterface::STATUS_REVIEW, function (string $content, ...$arguments) {
+})->listen(SensitiveInterface::STATUS_REVIEW, function (string $content) {
     return $content;// @todo review
-})->listen(SensitiveInterface::STATUS_REPLACE, function (string $content, ...$arguments) {
+})->listen(SensitiveInterface::STATUS_REPLACE, function (string $content) {
     return $content;// @todo replace
-})->listen(SensitiveInterface::STATUS_PASS, function (string $content, ...$arguments) {
+})->listen(SensitiveInterface::STATUS_PASS, function (string $content) {
     return $content;// @todo pass
-})->listen(SensitiveInterface::STATUS_ALL, function (string $content, ...$arguments) {
+})->listen(SensitiveInterface::STATUS_ALL, function (string $content) {
     return $content;// @todo any
 })->content($content);
 

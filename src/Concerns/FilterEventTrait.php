@@ -11,7 +11,8 @@ use Jundayw\LaravelSensitive\Events\SensitiveReviewEvent;
 
 trait FilterEventTrait
 {
-    protected array $events = [
+    protected array $events        = [];
+    protected array $defaultEvents = [
         SensitiveInterface::STATUS_PASS    => [
             SensitivePassEvent::class,
         ],
@@ -28,6 +29,9 @@ trait FilterEventTrait
 
     public function getEvents(?int $events = null): array
     {
+        if (count($this->events) === 0) {
+            $this->events = $this->defaultEvents;
+        }
         if (is_null($events)) {
             return $this->events;
         }
@@ -57,6 +61,7 @@ trait FilterEventTrait
                 }, $this->getEvents($status));
             }
         }
+        $this->events = $this->defaultEvents;
     }
 
 }

@@ -6,7 +6,8 @@ use Jundayw\LaravelSensitive\Contracts\SensitiveInterface;
 
 trait SensitiveListenTrait
 {
-    protected array $listens = [
+    protected array $listens        = [];
+    protected array $defaultListens = [
         SensitiveInterface::STATUS_PASS    => [],
         SensitiveInterface::STATUS_REPLACE => [],
         SensitiveInterface::STATUS_REVIEW  => [],
@@ -15,6 +16,9 @@ trait SensitiveListenTrait
 
     public function getListens(?int $listen = null): array
     {
+        if (count($this->listens) === 0) {
+            $this->listens = $this->defaultListens;
+        }
         if (is_null($listen)) {
             return $this->listens;
         }
@@ -26,7 +30,7 @@ trait SensitiveListenTrait
 
     public function listen(int $scope, callable $listen): static
     {
-        foreach ($this->listens as $status => $listens) {
+        foreach ($this->getListens() as $status => $listens) {
             if ($status === ($scope & $status)) {
                 $this->listens[$status][] = $listen;
             }

@@ -37,8 +37,10 @@ class Sensitive implements SensitiveInterface
 
     public function filter(string $content, string $field, int $scope = SensitiveInterface::STATUS_ALL): FilterInterface
     {
-        $raw        = $content;
-        $collection = $this->interceptor->handle($content, $field);
+        $this->scope = 0;
+        $raw         = $content;
+        $collection  = $this->interceptor->handle($content, $field);
+        $callback    = [];
 
         $maps = [
             DatabaseInterface::VALUE_BLOCK   => SensitiveInterface::STATUS_BLOCK,
@@ -53,11 +55,25 @@ class Sensitive implements SensitiveInterface
                 if (SensitiveInterface::STATUS_REPLACE == $status) {
                     $content = $this->replacement($content, $collect);
                 }
+                $callback[$status] = $collect;
+            }
+        }
+
+        if (($this->scope & $scope) == 0) {
+            $pass            = SensitiveInterface::STATUS_PASS;
+            $this->scope     |= $pass;
+            $callback[$pass] = collect();
+        }
+
+        foreach ($maps as $status) {
+            if ($status == ($this->scope & $status)) {
                 foreach ($this->getListens($status) as $listen) {
-                    $content = call_user_func($listen, $content, $field, $this->scope, $collect, $this);
+                    $content = call_user_func($listen, $content, $field, $this->scope, $callback[$status], $this);
                 }
             }
         }
+
+        $this->listens = $this->defaultListens;
 
         return $this->filter->handle($raw, $content, $field, $this->scope, $collection);
     }
