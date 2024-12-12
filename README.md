@@ -1,10 +1,11 @@
 # Laravel Sensitive Words Filter Package
 
-[![GitHub Tag](https://img.shields.io/github/v/tag/jundayw/laravel-sensitive)](https://github.com/jundayw/laravel-sensitive/tags)
-[![Total Downloads](https://img.shields.io/packagist/dt/jundayw/laravel-sensitive?style=flat-square)](https://packagist.org/packages/jundayw/laravel-sensitive)
-[![Packagist Version](https://img.shields.io/packagist/v/jundayw/laravel-sensitive)](https://packagist.org/packages/jundayw/laravel-sensitive)
-[![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/jundayw/laravel-sensitive)](https://github.com/jundayw/laravel-sensitive)
-[![Packagist License](https://img.shields.io/github/license/jundayw/laravel-sensitive)](https://github.com/jundayw/laravel-sensitive)
+[![Latest Stable Version](http://poser.pugx.org/jundayw/laravel-sensitive/v)](https://packagist.org/packages/jundayw/laravel-sensitive)
+[![Total Downloads](http://poser.pugx.org/jundayw/laravel-sensitive/downloads)](https://packagist.org/packages/jundayw/laravel-sensitive)
+[![Latest Stable Version](http://poser.pugx.org/jundayw/laravel-sensitive/v)](https://packagist.org/packages/jundayw/laravel-sensitive)
+[![Latest Unstable Version](http://poser.pugx.org/jundayw/laravel-sensitive/v/unstable)](https://packagist.org/packages/jundayw/laravel-sensitive)
+[![License](http://poser.pugx.org/jundayw/laravel-sensitive/license)](https://packagist.org/packages/jundayw/laravel-sensitive)
+[![PHP Version Require](http://poser.pugx.org/jundayw/laravel-sensitive/require/php)](https://packagist.org/packages/jundayw/laravel-sensitive)
 
 ## 安装
 
