@@ -2,7 +2,6 @@
 
 [![Latest Stable Version](https://poser.pugx.org/jundayw/laravel-sensitive/v)](https://packagist.org/packages/jundayw/laravel-sensitive)
 [![Total Downloads](https://poser.pugx.org/jundayw/laravel-sensitive/downloads)](https://packagist.org/packages/jundayw/laravel-sensitive)
-[![Latest Stable Version](https://poser.pugx.org/jundayw/laravel-sensitive/v)](https://packagist.org/packages/jundayw/laravel-sensitive)
 [![Latest Unstable Version](https://poser.pugx.org/jundayw/laravel-sensitive/v/unstable)](https://packagist.org/packages/jundayw/laravel-sensitive)
 [![License](https://poser.pugx.org/jundayw/laravel-sensitive/license)](https://packagist.org/packages/jundayw/laravel-sensitive)
 [![PHP Version Require](https://poser.pugx.org/jundayw/laravel-sensitive/require/php)](https://packagist.org/packages/jundayw/laravel-sensitive)
